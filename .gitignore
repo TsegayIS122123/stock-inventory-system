@@ -1,0 +1,9 @@
+vendor/
+.idea/
+.vscode/
+.DS_Store
+*.log
+*.tmp
+*.cache
+thumbs.db
+public/uploads/
