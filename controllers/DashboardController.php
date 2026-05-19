@@ -1,29 +1,31 @@
 <?php
 require_once BASE_PATH . '/models/Product.php';
 require_once BASE_PATH . '/models/Sale.php';
-require_once BASE_PATH . '/models/User.php';
+require_once BASE_PATH . '/models/Category.php';
 
 class DashboardController
 {
     private $productModel;
     private $saleModel;
-    private $userModel;
+    private $categoryModel;
 
     public function __construct($db)
     {
         $this->productModel = new Product($db);
         $this->saleModel = new Sale($db);
-        $this->userModel = new User($db);
+        $this->categoryModel = new Category($db);
     }
 
     public function index()
     {
         $this->checkAuth();
 
-        // Get all statistics
         $product_stats = $this->productModel->getStats();
-        $sale_stats = $this->saleModel->getStats();
+        $sale_stats = $this->saleModel->getStats();  // This line was causing error
         $low_stock = $this->productModel->getLowStockProducts();
+        $recent_sales = $this->saleModel->getRecent(5);
+        $top_products = $this->saleModel->getTopProducts(5);
+        $categories = $this->categoryModel->getAll();
 
         require_once BASE_PATH . '/views/dashboard/index.php';
     }

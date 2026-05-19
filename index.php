@@ -137,6 +137,58 @@ switch ($action) {
         $controller = new SalesController($db);
         $controller->invoice();
         break;
+    case 'products-show':
+        require_once 'controllers/ProductController.php';
+        $controller = new ProductController($db);
+        $controller->show();
+        break;
+    case 'get-product':
+        require_once 'controllers/ProductController.php';
+        $controller = new ProductController($db);
+        $controller->getProductJson();
+        break;
+    // Stock adjustment
+    case 'adjust-stock':
+        require_once 'controllers/ProductController.php';
+        $controller = new ProductController($db);
+        $controller->adjustStock();
+        break;
+
+    // Category management
+    case 'category-add':
+        require_once 'controllers/CategoryController.php';
+        $controller = new CategoryController($db);
+        $controller->add();
+        break;
+
+    case 'category-edit':
+        require_once 'controllers/CategoryController.php';
+        $controller = new CategoryController($db);
+        $controller->edit();
+        break;
+
+    case 'category-delete':
+        require_once 'controllers/CategoryController.php';
+        $controller = new CategoryController($db);
+        $controller->delete();
+        break;
+    // Add these cases to your switch statement:
+
+    case 'reports':
+        require_once 'controllers/ReportController.php';
+        $controller = new ReportController($db);
+        $controller->index();
+        break;
+
+    case 'settings':
+        require_once 'controllers/SettingsController.php';
+        $controller = new SettingsController($db);
+        $controller->index();
+        break;
+
+    case 'profile':
+        // Profile page (can be added)
+        break;
 
     // Default
     default:

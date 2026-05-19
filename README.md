@@ -224,7 +224,7 @@ tkc-stock/
 │   ├── ReportController.php
 │   └── DashboardController.php
 │
-├── models/                      # Models (Database Operations)
+├── models/             # Models (Database Operations)
 │   ├── User.php
 │   ├── Product.php
 │   ├── Sale.php

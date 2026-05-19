@@ -19,17 +19,20 @@ class ProductController
         $this->checkAuth();
 
         $products = $this->productModel->getAll();
+        $categories = $this->categoryModel->getAll();
+
         require_once BASE_PATH . '/views/products/index.php';
     }
 
-    // Show create product form
+    // Show create product form (not used in new modal system)
     public function create()
     {
         $this->checkAuth();
         $this->checkRole(['admin', 'manager']);
 
-        $categories = $this->categoryModel->getAll();
-        require_once BASE_PATH . '/views/products/create.php';
+        // Redirect to products page with modal
+        header('Location: index.php?action=products');
+        exit();
     }
 
     // Store product
@@ -40,49 +43,65 @@ class ProductController
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: index.php?action=products');
-            return;
+            exit();
         }
 
-        // Handle image upload (Chapter 3)
-        $image_path = null;
-        if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-            $image_path = $this->uploadImage($_FILES['image']);
+        // Get form data
+        $name = trim($_POST['name'] ?? '');
+        $price = floatval($_POST['price'] ?? 0);
+        $quantity = intval($_POST['quantity'] ?? 0);
+        $category_id = !empty($_POST['category_id']) ? intval($_POST['category_id']) : null;
+        $sku = trim($_POST['sku'] ?? '');
+        $description = trim($_POST['description'] ?? '');
+        $min_stock = intval($_POST['min_stock_level'] ?? 5);
+        $image = !empty($_POST['image_url']) ? trim($_POST['image_url']) : null;
+
+        // Generate SKU if empty
+        if (empty($sku)) {
+            $sku = 'PROD-' . strtoupper(uniqid());
         }
 
-        // Set product properties
-        $this->productModel->name = $_POST['name'];
-        $this->productModel->description = $_POST['description'] ?? '';
-        $this->productModel->sku = $_POST['sku'];
-        $this->productModel->price = $_POST['price'];
-        $this->productModel->cost_price = $_POST['cost_price'] ?? 0;
-        $this->productModel->quantity = $_POST['quantity'];
-        $this->productModel->min_stock_level = $_POST['min_stock_level'] ?? 5;
-        $this->productModel->category_id = $_POST['category_id'] ?? null;
-        $this->productModel->image = $image_path;
+        // Validate
+        if (empty($name) || $price <= 0) {
+            $_SESSION['error'] = "Product name and valid price are required";
+            header('Location: index.php?action=products');
+            exit();
+        }
 
+        // Set properties
+        $this->productModel->name = $name;
+        $this->productModel->description = $description;
+        $this->productModel->sku = $sku;
+        $this->productModel->price = $price;
+        $this->productModel->cost_price = floatval($_POST['cost_price'] ?? 0);
+        $this->productModel->quantity = $quantity;
+        $this->productModel->min_stock_level = $min_stock;
+        $this->productModel->category_id = $category_id;
+        $this->productModel->image = $image;
+
+        // Create product
         if ($this->productModel->create()) {
             $_SESSION['success'] = "Product added successfully";
-            header('Location: index.php?action=products');
         } else {
             $_SESSION['error'] = "Failed to add product";
-            header('Location: index.php?action=products-create');
         }
+
+        // IMPORTANT: Redirect BACK to products page, NOT dashboard
+        header('Location: index.php?action=products');
+        exit();
     }
 
-    // Edit product form
+    // Edit product form (not used - we use modal)
     public function edit()
     {
         $this->checkAuth();
         $this->checkRole(['admin', 'manager']);
 
-        $id = $_GET['id'] ?? 0;
-        $product = $this->productModel->getById($id);
-        $categories = $this->categoryModel->getAll();
-
-        require_once BASE_PATH . '/views/products/edit.php';
+        header('Location: index.php?action=products');
+        exit();
     }
 
-    // Update product
+    // Update product - FIXED
     public function update()
     {
         $this->checkAuth();
@@ -90,22 +109,54 @@ class ProductController
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: index.php?action=products');
-            return;
+            exit();
         }
 
-        $this->productModel->id = $_POST['id'];
-        $this->productModel->name = $_POST['name'];
-        $this->productModel->description = $_POST['description'] ?? '';
-        $this->productModel->sku = $_POST['sku'];
-        $this->productModel->price = $_POST['price'];
-        $this->productModel->cost_price = $_POST['cost_price'] ?? 0;
-        $this->productModel->quantity = $_POST['quantity'];
-        $this->productModel->min_stock_level = $_POST['min_stock_level'] ?? 5;
-        $this->productModel->category_id = $_POST['category_id'] ?? null;
+        $id = intval($_POST['id'] ?? 0);
+        if ($id <= 0) {
+            $_SESSION['error'] = "Invalid product ID";
+            header('Location: index.php?action=products');
+            exit();
+        }
 
-        // Handle new image upload
-        if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-            $this->productModel->image = $this->uploadImage($_FILES['image']);
+        // Get form data
+        $name = trim($_POST['name'] ?? '');
+        $price = floatval($_POST['price'] ?? 0);
+        $quantity = intval($_POST['quantity'] ?? 0);
+        $category_id = !empty($_POST['category_id']) ? intval($_POST['category_id']) : null;
+        $sku = trim($_POST['sku'] ?? '');
+        $description = trim($_POST['description'] ?? '');
+        $min_stock = intval($_POST['min_stock_level'] ?? 5);
+
+        // Handle image
+        $image = null;
+        if (!empty($_POST['image_url'])) {
+            $image = trim($_POST['image_url']);
+        } elseif (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+            $image = $this->uploadImage($_FILES['image']);
+        }
+
+        // Validate
+        if (empty($name) || $price <= 0) {
+            $_SESSION['error'] = "Product name and valid price are required";
+            header('Location: index.php?action=products');
+            exit();
+        }
+
+        // Set product properties
+        $this->productModel->id = $id;
+        $this->productModel->name = $name;
+        $this->productModel->description = $description;
+        $this->productModel->sku = $sku;
+        $this->productModel->price = $price;
+        $this->productModel->cost_price = floatval($_POST['cost_price'] ?? 0);
+        $this->productModel->quantity = $quantity;
+        $this->productModel->min_stock_level = $min_stock;
+        $this->productModel->category_id = $category_id;
+
+        // Only update image if a new one was provided
+        if ($image) {
+            $this->productModel->image = $image;
         }
 
         if ($this->productModel->update()) {
@@ -115,6 +166,61 @@ class ProductController
         }
 
         header('Location: index.php?action=products');
+        exit();
+    }
+
+    // Show single product details
+    public function show()
+    {
+        $this->checkAuth();
+
+        $id = $_GET['id'] ?? 0;
+        $product = $this->productModel->getById($id);
+
+        if (!$product) {
+            $_SESSION['error'] = "Product not found";
+            header('Location: index.php?action=products');
+            return;
+        }
+
+        require_once BASE_PATH . '/views/products/show.php';
+    }
+
+    // Get single product as JSON - FIXED to include category_name
+    public function getProductJson()
+    {
+        $this->checkAuth();
+
+        $id = $_GET['id'] ?? 0;
+        $product = $this->productModel->getById($id);
+
+        // Ensure category_name is included
+        if ($product && !isset($product['category_name'])) {
+            $category = $this->categoryModel->getById($product['category_id']);
+            $product['category_name'] = $category ? $category['name'] : null;
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($product);
+        exit();
+    }
+
+    // Adjust stock
+    public function adjustStock()
+    {
+        $this->checkAuth();
+
+        $data = json_decode(file_get_contents('php://input'), true);
+        $product_id = $data['product_id'] ?? 0;
+        $quantity_change = intval($data['quantity_change'] ?? 0);
+
+        if ($product_id && $quantity_change != 0) {
+            $result = $this->productModel->adjustStock($product_id, $quantity_change, 'manual');
+            echo json_encode(['success' => $result]);
+        } else {
+            echo json_encode(['success' => false]);
+        }
+        exit();
     }
 
     // Delete product
@@ -132,6 +238,7 @@ class ProductController
         }
 
         header('Location: index.php?action=products');
+        exit();
     }
 
     // Search products
@@ -142,7 +249,6 @@ class ProductController
         $keyword = $_GET['q'] ?? '';
         $products = $this->productModel->search($keyword);
 
-        // Return JSON for AJAX requests
         if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
             header('Content-Type: application/json');
             echo json_encode($products);
@@ -152,12 +258,23 @@ class ProductController
         require_once BASE_PATH . '/views/products/index.php';
     }
 
+    // Generate SKU
+    private function generateSKU()
+    {
+        return 'PROD-' . strtoupper(uniqid());
+    }
+
     // Upload image
     private function uploadImage($file)
     {
-        $target_dir = PRODUCT_IMG_DIR;
-        $filename = time() . '_' . basename($file["name"]);
-        $target_file = $target_dir . $filename;
+        // Create uploads directory if not exists
+        $upload_dir = BASE_PATH . '/public/uploads/products/';
+        if (!file_exists($upload_dir)) {
+            mkdir($upload_dir, 0777, true);
+        }
+
+        $filename = time() . '_' . preg_replace('/[^a-zA-Z0-9\._-]/', '', basename($file["name"]));
+        $target_file = $upload_dir . $filename;
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
         $allowed_types = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
@@ -173,7 +290,7 @@ class ProductController
         }
 
         if (move_uploaded_file($file["tmp_name"], $target_file)) {
-            return 'uploads/products/' . $filename;
+            return BASE_URL . 'public/uploads/products/' . $filename;
         }
 
         return null;

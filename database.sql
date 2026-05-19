@@ -33,6 +33,8 @@ CREATE TABLE categories (
     name VARCHAR(50) NOT NULL UNIQUE,
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    product_count INT DEFAULT 0,
+    is_active TINYINT(1) DEFAULT 1;
 );
 
 -- ======================================================
@@ -121,6 +123,18 @@ CREATE TABLE stock_logs (
     INDEX idx_type (type),
     INDEX idx_date (created_at)
 );
+-- --- Table 7:  customer table for better analytics
+-- CREATE TABLE IF NOT EXISTS customers (
+--     id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     name VARCHAR(100) NOT NULL,
+--     email VARCHAR(100),
+--     phone VARCHAR(20),
+--     total_purchases DECIMAL(10,2) DEFAULT 0.00,
+--     last_purchase_date DATETIME DEFAULT NULL,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     INDEX idx_email (email),
+--     INDEX idx_phone (phone)
+-- );
 
 -- ======================================================
 -- Insert Sample Data
@@ -165,3 +179,35 @@ INSERT INTO sale_items (sale_id, product_id, quantity, price, subtotal) VALUES
 UPDATE products SET quantity = quantity - 1 WHERE id = 1;
 UPDATE products SET quantity = quantity - 2 WHERE id = 6;
 UPDATE products SET quantity = quantity - 1 WHERE id = 7;
+
+
+
+
+-- Make sure categories table has all needed fields
+ALTER TABLE categories ADD COLUMN IF NOT EXISTS product_count INT DEFAULT 0;
+ALTER TABLE categories ADD COLUMN IF NOT EXISTS is_active TINYINT(1) DEFAULT 1;
+
+-- Update category counts
+UPDATE categories c 
+SET product_count = (
+    SELECT COUNT(*) FROM products p 
+    WHERE p.category_id = c.id AND p.is_active = 1
+);
+-- -- Add more sample customers
+-- INSERT INTO customers (name, email, phone, total_purchases) VALUES
+-- ('John Doe', 'john@example.com', '0912345678', 1028.99),
+-- ('Mary Smith', 'mary@example.com', '0923456789', 0),
+-- ('Abebe Kebede', 'abebe@example.com', '0934567890', 0),
+-- ('Tigist Haile', 'tigist@example.com', '0945678901', 0);
+
+-- Update category counts
+-- UPDATE categories c 
+-- SET product_count = (
+--     SELECT COUNT(*) FROM products p 
+--     WHERE p.category_id = c.id AND p.is_active = 1
+-- );
+
+-- -- Add index for better performance
+-- ALTER TABLE sale_items ADD INDEX idx_product_sale (product_id, sale_id);
+-- ALTER TABLE products ADD INDEX idx_name (name);
+-- ALTER TABLE sales ADD INDEX idx_customer_date (customer_name, created_at);

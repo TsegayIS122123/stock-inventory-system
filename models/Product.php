@@ -50,7 +50,7 @@ class Product
             $this->id = $this->conn->insert_id;
 
             // Log stock change
-            $this->logStockChange($this->id, $this->quantity, $this->quantity, 'purchase');
+            $this->logStockChange($this->id, $this->quantity, 'purchase');
 
             return true;
         }
@@ -202,15 +202,50 @@ class Product
         return $stats;
     }
 
-    // Log stock changes
-    private function logStockChange($product_id, $change, $new_qty, $type)
+    // Log stock changes - FIXED VERSION
+    private function logStockChange($product_id, $change, $type)
     {
         $query = "INSERT INTO stock_logs (product_id, user_id, quantity_change, new_quantity, type) 
-                  VALUES (?, ?, ?, ?, ?)";
+              VALUES (?, ?, ?, ?, ?)";
 
         $stmt = $this->conn->prepare($query);
         $user_id = $_SESSION['user_id'] ?? 1;
-        $stmt->bind_param("iiids", $product_id, $user_id, $change, $new_qty, $type);
+        $new_quantity = $change; // For new products
+        $stmt->bind_param("iiids", $product_id, $user_id, $change, $new_quantity, $type);
         $stmt->execute();
+    }
+    // Add this method to Product class
+    public function adjustStock($product_id, $quantity_change, $reason = 'adjustment')
+    {
+        $current = $this->getById($product_id);
+        $new_quantity = $current['quantity'] + $quantity_change;
+
+        if ($new_quantity < 0) {
+            return false; // Cannot go below zero
+        }
+
+        $this->conn->begin_transaction();
+
+        try {
+            // Update product quantity
+            $query = "UPDATE " . $this->table . " SET quantity = ? WHERE id = ?";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bind_param("ii", $new_quantity, $product_id);
+            $stmt->execute();
+
+            // Log stock change
+            $query = "INSERT INTO stock_logs (product_id, user_id, quantity_change, previous_quantity, new_quantity, type) 
+                  VALUES (?, ?, ?, ?, ?, ?)";
+            $stmt = $this->conn->prepare($query);
+            $user_id = $_SESSION['user_id'] ?? 1;
+            $stmt->bind_param("iiiids", $product_id, $user_id, $quantity_change, $current['quantity'], $new_quantity, $reason);
+            $stmt->execute();
+
+            $this->conn->commit();
+            return true;
+        } catch (Exception $e) {
+            $this->conn->rollback();
+            return false;
+        }
     }
 }
