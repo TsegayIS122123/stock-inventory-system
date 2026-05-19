@@ -49,7 +49,7 @@ class Product
         if ($stmt->execute()) {
             $this->id = $this->conn->insert_id;
 
-            // Log stock change
+            // Log stock change - FIX: Pass only 3 parameters
             $this->logStockChange($this->id, $this->quantity, 'purchase');
 
             return true;
@@ -120,7 +120,8 @@ class Product
 
         if ($result && $old_product['quantity'] != $this->quantity) {
             $change = $this->quantity - $old_product['quantity'];
-            $this->logStockChange($this->id, $change, $this->quantity, 'adjustment');
+            // FIX: Pass only 3 parameters (product_id, change, type)
+            $this->logStockChange($this->id, $change, 'adjustment');
         }
 
         return $result;
@@ -203,6 +204,7 @@ class Product
     }
 
     // Log stock changes - FIXED VERSION
+    // FIX: Method now accepts exactly 3 parameters (product_id, change, type)
     private function logStockChange($product_id, $change, $type)
     {
         $query = "INSERT INTO stock_logs (product_id, user_id, quantity_change, new_quantity, type) 
@@ -214,6 +216,7 @@ class Product
         $stmt->bind_param("iiids", $product_id, $user_id, $change, $new_quantity, $type);
         $stmt->execute();
     }
+
     // Add this method to Product class
     public function adjustStock($product_id, $quantity_change, $reason = 'adjustment')
     {
