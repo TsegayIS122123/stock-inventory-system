@@ -309,8 +309,8 @@ require_once BASE_PATH . '/views/layouts/sidebar.php';
         document.getElementById('productForm').reset();
         document.getElementById('productId').value = '';
         document.getElementById('imagePreview').classList.add('hidden');
-        // Remove any existing action attribute to use default
-        document.getElementById('productForm').removeAttribute('action');
+        // FIX: Use setAttribute() to properly set the form action for new products
+        document.getElementById('productForm').setAttribute('action', 'index.php?action=products-store');
         document.getElementById('productModal').style.display = 'flex';
     }
 
@@ -332,7 +332,7 @@ require_once BASE_PATH . '/views/layouts/sidebar.php';
                     document.getElementById('previewImg').src = product.image;
                     document.getElementById('imagePreview').classList.remove('hidden');
                 }
-                // Set action for update
+                // FIX: Use setAttribute() to properly set the form action for editing
                 document.getElementById('productForm').setAttribute('action', 'index.php?action=products-update');
                 document.getElementById('productModal').style.display = 'flex';
             });
@@ -351,12 +351,6 @@ require_once BASE_PATH . '/views/layouts/sidebar.php';
             window.location.href = 'index.php?action=products-delete&id=' + id;
         }
     }
-
-    // Ensure form submits normally - NO PREVENT DEFAULT
-    // document.getElementById('productForm').onsubmit = function() {
-    //     console.log('Form submitting to:', this.action);
-    //     return true; // Allow normal form submission
-    // };
 </script>
 
 <?php require_once BASE_PATH . '/views/layouts/footer.php'; ?>
