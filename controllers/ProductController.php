@@ -42,6 +42,7 @@ class ProductController
         $this->checkRole(['admin', 'manager']);
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $_SESSION['error'] = "Invalid request method";
             header('Location: index.php?action=products');
             exit();
         }
@@ -82,13 +83,13 @@ class ProductController
         // Create product
         if ($this->productModel->create()) {
             $_SESSION['success'] = "Product added successfully";
+            header('Location: index.php?action=products');
+            exit();
         } else {
-            $_SESSION['error'] = "Failed to add product";
+            $_SESSION['error'] = "Failed to add product: " . $this->productModel->getLastError();
+            header('Location: index.php?action=products');
+            exit();
         }
-
-        // IMPORTANT: Redirect BACK to products page, NOT dashboard
-        header('Location: index.php?action=products');
-        exit();
     }
 
     // Edit product form (not used - we use modal)
@@ -101,13 +102,14 @@ class ProductController
         exit();
     }
 
-    // Update product - FIXED
+    // Update product
     public function update()
     {
         $this->checkAuth();
         $this->checkRole(['admin', 'manager']);
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $_SESSION['error'] = "Invalid request method";
             header('Location: index.php?action=products');
             exit();
         }
@@ -161,12 +163,13 @@ class ProductController
 
         if ($this->productModel->update()) {
             $_SESSION['success'] = "Product updated successfully";
+            header('Location: index.php?action=products');
+            exit();
         } else {
             $_SESSION['error'] = "Failed to update product";
+            header('Location: index.php?action=products');
+            exit();
         }
-
-        header('Location: index.php?action=products');
-        exit();
     }
 
     // Show single product details
@@ -186,7 +189,7 @@ class ProductController
         require_once BASE_PATH . '/views/products/show.php';
     }
 
-    // Get single product as JSON - FIXED to include category_name
+    // Get single product as JSON
     public function getProductJson()
     {
         $this->checkAuth();
@@ -299,6 +302,7 @@ class ProductController
     private function checkAuth()
     {
         if (!isset($_SESSION['user_id'])) {
+            $_SESSION['error'] = "Please login first";
             header('Location: index.php?action=login');
             exit();
         }
@@ -306,8 +310,12 @@ class ProductController
 
     private function checkRole($roles)
     {
-        if (!in_array($_SESSION['role'], $roles)) {
-            $_SESSION['error'] = "You don't have permission to access this page";
+        // Normalize role to lowercase for comparison
+        $userRole = strtolower(trim($_SESSION['role'] ?? ''));
+        $roles = array_map('strtolower', $roles);
+        
+        if (!in_array($userRole, $roles)) {
+            $_SESSION['error'] = "You don't have permission. Your role is: " . $_SESSION['role'];
             header('Location: index.php?action=dashboard');
             exit();
         }
