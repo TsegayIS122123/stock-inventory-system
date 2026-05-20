@@ -127,10 +127,13 @@ require_once BASE_PATH . '/views/layouts/sidebar.php';
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
-                    <div><label class="block text-xs font-medium mb-1">Price *</label><input type="number" name="price" id="productPrice" step="0.01" required class="w-full px-3 py-1.5 text-sm border rounded-lg"></div>
-                    <div><label class="block text-xs font-medium mb-1">Quantity</label><input type="number" name="quantity" id="productQuantity" value="0" class="w-full px-3 py-1.5 text-sm border rounded-lg"></div>
+                    <div><label class="block text-xs font-medium mb-1">Selling Price *</label><input type="number" name="price" id="productPrice" step="0.01" required class="w-full px-3 py-1.5 text-sm border rounded-lg"></div>
+                    <div><label class="block text-xs font-medium mb-1">Cost Price</label><input type="number" name="cost_price" id="productCostPrice" step="0.01" class="w-full px-3 py-1.5 text-sm border rounded-lg"></div>
                 </div>
-                <div><label class="block text-xs font-medium mb-1">Min Stock Alert</label><input type="number" name="min_stock_level" id="productMinStock" value="5" class="w-full px-3 py-1.5 text-sm border rounded-lg"></div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="block text-xs font-medium mb-1">Quantity</label><input type="number" name="quantity" id="productQuantity" value="0" class="w-full px-3 py-1.5 text-sm border rounded-lg"></div>
+                    <div><label class="block text-xs font-medium mb-1">Min Stock Alert</label><input type="number" name="min_stock_level" id="productMinStock" value="5" class="w-full px-3 py-1.5 text-sm border rounded-lg"></div>
+                </div>
                 <div><label class="block text-xs font-medium mb-1">Description</label><textarea name="description" id="productDescription" rows="2" class="w-full px-3 py-1.5 text-sm border rounded-lg"></textarea></div>
                 <div><label class="block text-xs font-medium mb-1">Image URL</label><input type="text" name="image_url" id="productImage" placeholder="https://..." class="w-full px-3 py-1.5 text-sm border rounded-lg"></div>
                 <div id="imagePreview" class="hidden"><img id="previewImg" class="w-16 h-16 object-cover rounded"></div>
@@ -324,6 +327,7 @@ require_once BASE_PATH . '/views/layouts/sidebar.php';
                 document.getElementById('productSku').value = product.sku;
                 document.getElementById('productCategory').value = product.category_id;
                 document.getElementById('productPrice').value = product.price;
+                document.getElementById('productCostPrice').value = product.cost_price;
                 document.getElementById('productQuantity').value = product.quantity;
                 document.getElementById('productMinStock').value = product.min_stock_level;
                 document.getElementById('productDescription').value = product.description;
@@ -342,7 +346,7 @@ require_once BASE_PATH . '/views/layouts/sidebar.php';
         fetch('index.php?action=get-product&id=' + id)
             .then(res => res.json())
             .then(p => {
-                alert(`Product Details:\n\nName: ${p.name}\nSKU: ${p.sku}\nPrice: $${parseFloat(p.price).toFixed(2)}\nStock: ${p.quantity}\nCategory: ${p.category_name || 'Uncategorized'}`);
+                alert(`Product Details:\n\nName: ${p.name}\nSKU: ${p.sku}\nPrice: $${parseFloat(p.price).toFixed(2)}\nCost: $${parseFloat(p.cost_price).toFixed(2)}\nStock: ${p.quantity}\nCategory: ${p.category_name || 'Uncategorized'}`);
             });
     }
 
