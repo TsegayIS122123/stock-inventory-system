@@ -86,7 +86,7 @@ class ProductController
             header('Location: index.php?action=products');
             exit();
         } else {
-            $_SESSION['error'] = "Failed to add product: " . $this->productModel->getLastError();
+            $_SESSION['error'] = "Failed to add product. Please check your data.";
             header('Location: index.php?action=products');
             exit();
         }
@@ -316,7 +316,7 @@ class ProductController
         
         if (!in_array($userRole, $roles)) {
             $_SESSION['error'] = "You don't have permission. Your role is: " . $_SESSION['role'];
-            header('Location: index.php?action=dashboard');
+            header('Location: index.php?action=products');
             exit();
         }
     }
