@@ -21,7 +21,7 @@ class DashboardController
         $this->checkAuth();
 
         $product_stats = $this->productModel->getStats();
-        $sale_stats = $this->saleModel->getStats();  // This line was causing error
+        $sale_stats = $this->saleModel->getStats();  
         $low_stock = $this->productModel->getLowStockProducts();
         $recent_sales = $this->saleModel->getRecent(5);
         $top_products = $this->saleModel->getTopProducts(5);

@@ -1,6 +1,6 @@
 <?php
 // ======================================================
-// Product Model - CRUD Operations (Chapter 4 & 5)
+// Product Model - CRUD Operations 
 // ======================================================
 
 class Product

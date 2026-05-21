@@ -79,7 +79,7 @@ require_once BASE_PATH . '/views/layouts/sidebar.php';
         <i class="fas fa-chart-pie"></i>
         <span>View Reports</span>
     </a>
-    <a href="#" class="action-btn" onclick="alert('About TKC-Stock - Smart Inventory Management System v2.0')">
+    <a href="index.php?action=settings" class="action-btn">
         <i class="fas fa-info-circle"></i>
         <span>About System</span>
     </a>

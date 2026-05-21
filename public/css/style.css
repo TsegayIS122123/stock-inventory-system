@@ -8,11 +8,11 @@
 body {
     background-color: #f0f2f5;
     color: #333;
-    overflow-y: auto;      /* ONLY browser scrollbar */
-    overflow-x: hidden;
 }
 
-/* Header - Normal Flow (NOT fixed, NOT sticky) */
+/* ======================================================
+   HEADER STYLES
+   ====================================================== */
 .main-header {
     background: #2c3e50;
     color: white;
@@ -21,8 +21,6 @@ body {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    /* NO position: fixed */
-    /* NO position: sticky */
 }
 
 .logo-container {
@@ -53,7 +51,7 @@ body {
     align-items: center;
     gap: 6px;
     padding: 4px 12px;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 20px;
 }
 
@@ -74,33 +72,34 @@ body {
     font-weight: 600;
 }
 
-/* Dashboard Container - NO height restrictions */
+/* ======================================================
+   DASHBOARD CONTAINER
+   ====================================================== */
 .dashboard-container {
     display: flex;
     width: 100%;
-    /* NO height: 100vh */
-    /* NO min-height: 100vh */
 }
 
-/* Sidebar - NO scroll */
+/* ======================================================
+   SIDEBAR STYLES - NARROW & CLEAN
+   ====================================================== */
 .sidebar {
-    width: 250px;
+    width: 180px;
     background: white;
     border-right: 1px solid #e0e6ed;
     display: flex;
     flex-direction: column;
-    /* NO overflow-y: auto */
-    /* NO max-height */
+    flex-shrink: 0;
 }
 
 .nav-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px 20px;
+    gap: 8px;
+    padding: 10px 12px;
     color: #5a6e7c;
     text-decoration: none;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 500;
     transition: all 0.3s;
     border-left: 3px solid transparent;
@@ -112,13 +111,13 @@ body {
 }
 
 .nav-item.active {
-    background: rgba(52,152,219,0.1);
+    background: rgba(52, 152, 219, 0.1);
     color: #3498db;
     border-left-color: #3498db;
 }
 
 .nav-item i {
-    width: 20px;
+    width: 18px;
     font-size: 13px;
 }
 
@@ -129,18 +128,21 @@ body {
 }
 
 .logout-item:hover {
-    background: rgba(231,76,60,0.1);
+    background: rgba(231, 76, 60, 0.1);
     color: #e74c3c;
 }
 
-/* Main Content - NO scroll */
+/* ======================================================
+   MAIN CONTENT - FLEX TAKES REMAINING SPACE
+   ====================================================== */
 .main-content {
     flex: 1;
     padding: 20px 25px;
-    /* NO overflow-y: auto */
 }
 
-/* Page Header */
+/* ======================================================
+   PAGE HEADER
+   ====================================================== */
 .page-header {
     margin-bottom: 20px;
 }
@@ -154,47 +156,65 @@ body {
 
 .page-header p {
     color: #7f8c8d;
-    font-size: 12px;
+    font-size: 13px;
 }
 
-/* Stats Row - 4 Cards in One Line */
-.stats-row {
+/* ======================================================
+   STATS CARDS - RESPONSIVE
+   ====================================================== */
+.stats-row, .stats-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 15px;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
 .stat-card {
     background: white;
     border-radius: 10px;
-    padding: 15px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    padding: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
     border: 1px solid #e9ecef;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
+    transition: all 0.3s;
 }
 
 .stat-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .stat-icon {
-    width: 45px;
-    height: 45px;
+    width: 40px;
+    height: 40px;
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
+    font-size: 18px;
 }
 
-.stat-icon.blue { background: rgba(52,152,219,0.12); color: #3498db; }
-.stat-icon.green { background: rgba(46,204,113,0.12); color: #2ecc71; }
-.stat-icon.purple { background: rgba(155,89,182,0.12); color: #9b59b6; }
-.stat-icon.orange { background: rgba(230,126,34,0.12); color: #e67e22; }
+.stat-icon.blue {
+    background: rgba(52, 152, 219, 0.12);
+    color: #3498db;
+}
+
+.stat-icon.green {
+    background: rgba(46, 204, 113, 0.12);
+    color: #2ecc71;
+}
+
+.stat-icon.purple {
+    background: rgba(155, 89, 182, 0.12);
+    color: #9b59b6;
+}
+
+.stat-icon.orange {
+    background: rgba(230, 126, 34, 0.12);
+    color: #e67e22;
+}
 
 .stat-info {
     flex: 1;
@@ -202,103 +222,124 @@ body {
 
 .stat-info h3 {
     color: #8e9aaf;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
+    letter-spacing: 0.3px;
 }
 
 .stat-number {
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 700;
     color: #2c3e50;
 }
 
 .stat-change {
-    font-size: 10px;
-    margin-top: 3px;
+    font-size: 9px;
+    margin-top: 2px;
+    color: #8e9aaf;
 }
 
-.stat-change.positive { color: #2ecc71; }
-.stat-change.negative { color: #e74c3c; }
+.stat-change.positive {
+    color: #2ecc71;
+}
 
-/* Quick Actions Row - 4 Cards in One Line */
+.stat-change.negative {
+    color: #e74c3c;
+}
+
+/* ======================================================
+   QUICK ACTIONS - RESPONSIVE
+   ====================================================== */
 .actions-row {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 12px;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
 .action-btn {
     background: white;
     border: 1px solid #e9ecef;
-    border-radius: 10px;
-    padding: 12px;
+    border-radius: 8px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
-    cursor: pointer;
+    gap: 5px;
     text-decoration: none;
     transition: all 0.3s;
+    cursor: pointer;
 }
 
 .action-btn:hover {
     border-color: #3498db;
     transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
 
 .action-btn i {
-    font-size: 22px;
+    font-size: 18px;
     color: #3498db;
 }
 
 .action-btn span {
     color: #2c3e50;
     font-weight: 600;
-    font-size: 12px;
+    font-size: 11px;
 }
 
-/* Two Column Layout */
+/* ======================================================
+   TWO COLUMN LAYOUT
+   ====================================================== */
 .two-column {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
-/* Dashboard Sections */
+/* ======================================================
+   DASHBOARD SECTIONS
+   ====================================================== */
 .dashboard-section {
     background: white;
-    border-radius: 12px;
-    padding: 18px;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
     border: 1px solid #e9ecef;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
 .section-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e9ecef;
 }
 
 .section-header h3 {
-    color: #2c3e50;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
+    color: #2c3e50;
 }
 
 .view-all {
     color: #3498db;
     text-decoration: none;
-    font-size: 12px;
+    font-size: 11px;
 }
 
-/* Tables */
+.view-all:hover {
+    text-decoration: underline;
+}
+
+/* ======================================================
+   TABLES
+   ====================================================== */
 .table-container {
-    overflow-x: auto;  /* Only horizontal scroll for wide tables */
+    overflow-x: auto;
 }
 
 .data-table {
@@ -322,10 +363,16 @@ body {
     font-size: 12px;
 }
 
-/* Categories Grid */
+.data-table tr:hover {
+    background: #f8f9fc;
+}
+
+/* ======================================================
+   CATEGORIES GRID
+   ====================================================== */
 .categories-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     gap: 10px;
 }
 
@@ -335,6 +382,12 @@ body {
     border-radius: 8px;
     text-align: center;
     border: 1px solid #e9ecef;
+    transition: all 0.3s;
+}
+
+.category-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .category-card i {
@@ -354,7 +407,9 @@ body {
     color: #8e9aaf;
 }
 
-/* Alert Box */
+/* ======================================================
+   ALERT BOX
+   ====================================================== */
 .alert-box {
     background: #fff3cd;
     border-left: 4px solid #ffc107;
@@ -373,15 +428,15 @@ body {
     display: inline-block;
 }
 
-/* Footer - Normal Flow */
+/* ======================================================
+   FOOTER
+   ====================================================== */
 .main-footer {
     background: #2c3e50;
     color: #ecf0f1;
     padding: 10px 25px;
     text-align: center;
     width: 100%;
-    /* NO position: fixed */
-    /* NO position: sticky */
 }
 
 .main-footer p {
@@ -404,13 +459,37 @@ body {
     font-size: 11px;
 }
 
-/* Responsive */
-@media (max-width: 1000px) {
-    .stats-row {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    .actions-row {
-        grid-template-columns: repeat(2, 1fr);
+/* ======================================================
+   MODAL STYLES (for products, categories, stock)
+   ====================================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+/* ======================================================
+   RESPONSIVE DESIGN
+   ====================================================== */
+@media (max-width: 1024px) {
+    .two-column {
+        gap: 15px;
     }
 }
 
@@ -418,33 +497,145 @@ body {
     .dashboard-container {
         flex-direction: column;
     }
-    
+
     .sidebar {
         width: 100%;
         flex-direction: row;
         flex-wrap: wrap;
         border-right: none;
         border-bottom: 1px solid #e0e6ed;
-        padding: 5px;
+        padding: 8px;
     }
-    
+
     .nav-item {
-        padding: 8px 12px;
+        padding: 6px 10px;
     }
-    
+
     .logout-item {
         margin-top: 0;
     }
-    
-    .stats-row {
+
+    .main-content {
+        padding: 15px;
+    }
+
+    .stats-row, .stats-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .actions-row {
         grid-template-columns: 1fr;
     }
-    
+
     .two-column {
         grid-template-columns: 1fr;
+        gap: 15px;
     }
+
+    .categories-grid {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .main-header {
+        padding: 8px 15px;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .header-controls {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .brand-name {
+        font-size: 16px;
+    }
+
+    .stat-card {
+        padding: 10px;
+    }
+
+    .stat-number {
+        font-size: 18px;
+    }
+
+    .stat-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+    }
+}
+
+/* ======================================================
+   REPORTS & SETTINGS PAGES
+   ====================================================== */
+.report-tab, .settings-tab-btn {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.report-panel, .settings-tab-panel {
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#salesChart {
+    max-height: 300px;
+    width: 100%;
+}
+
+/* ======================================================
+   PRINT STYLES (for invoices)
+   ====================================================== */
+@media print {
+    .sidebar, .main-header, .main-footer, button, .actions-row, .no-print {
+        display: none !important;
+    }
+
+    body {
+        background: white;
+        padding: 0;
+        margin: 0;
+    }
+
+    .main-content {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .bg-white {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+    }
+}
+
+/* ======================================================
+   UTILITY CLASSES
+   ====================================================== */
+.text-center {
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}
+
+.mt-2 {
+    margin-top: 8px;
+}
+
+.mb-2 {
+    margin-bottom: 8px;
 }
