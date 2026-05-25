@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TK-Stock | Register</title>
+    <title>TKC-Stock | Register</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
-<body class="bg-gradient-to-br from-blue-900 via-purple-800 to-indigo-900 min-h-screen">
+<body class="bg-gradient-to-br from-white-900 via-purple-800 to-indigo-900 min-h-screen">
 
     <div class="min-h-screen flex items-center justify-center px-4 py-8">
         <div class="max-w-md w-full bg-white rounded-2xl shadow-2xl overflow-hidden">
@@ -109,7 +109,7 @@
 
             <!-- Footer -->
             <div class="bg-gray-50 px-6 py-3 text-center border-t">
-                <p class="text-xs text-gray-500">&copy; 2025 TK-Stock. All rights reserved.</p>
+                <p class="text-xs text-gray-500">&copy; 2025 TKC-Stock. All rights reserved.</p>
                 <p class="text-xs text-gray-400 mt-1">Advanced Internet Programming - INSY3082</p>
             </div>
         </div>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TK-Stock | Login</title>
+    <title>TKC-Stock | Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -66,13 +66,13 @@
                         <p id="passwordError" class="text-red-500 text-xs mt-1 hidden"></p>
                     </div>
 
-                    <div class="flex items-center justify-between mb-6">
+                    <!-- <div class="flex items-center justify-between mb-6">
                         <label class="flex items-center">
                             <input type="checkbox" name="remember" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
                             <span class="ml-2 text-sm text-gray-600">Remember me</span>
                         </label>
                         <a href="#" class="text-sm text-blue-600 hover:text-blue-800">Forgot Password?</a>
-                    </div>
+                    </div> -->
 
                     <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-2 rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 transition duration-300">
                         <i class="fas fa-sign-in-alt mr-2"></i> Sign In
@@ -90,7 +90,7 @@
 
             <!-- Footer -->
             <div class="bg-gray-50 px-6 py-4 text-center border-t">
-                <p class="text-xs text-gray-500">&copy; 2025 TK-Stock. All rights reserved.</p>
+                <p class="text-xs text-gray-500">&copy; 2025 TKC-Stock. All rights reserved.</p>
                 <p class="text-xs text-gray-400 mt-1">Advanced Internet Programming - INSY3082</p>
             </div>
         </div>

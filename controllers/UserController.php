@@ -32,7 +32,7 @@ class UserController
             return;
         }
 
-        // Form validation (Chapter 2)
+        // Form validation 
         $email = trim($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
 

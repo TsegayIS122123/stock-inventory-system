@@ -1,6 +1,6 @@
 <?php
 // ======================================================
-// User Model - Handles all user operations (Chapter 4 OOP)
+// User Model - Handles all user operations 
 // ======================================================
 
 class User
@@ -8,7 +8,7 @@ class User
     private $conn;
     private $table = 'users';
 
-    // Properties (Chapter 4 - Class Properties)
+    // Properties ( Class Properties)
     public $id;
     public $username;
     public $email;

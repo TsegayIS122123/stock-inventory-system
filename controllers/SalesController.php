@@ -122,8 +122,16 @@ class SalesController
         if (empty($customer_name)) {
             $customer_name = 'Walk-in Customer';
         }
+        
 
         $payment_method = $_POST['payment_method'] ?? 'cash';
+        // 🔧 ENSURE NOT EMPTY
+        if (empty($payment_method)) {
+            $payment_method = 'cash';
+        }
+
+        // 🔧 ADD LOGGING
+        error_log("Payment method being sent: " . $payment_method);
 
         $items = [];
         $subtotal = 0;
